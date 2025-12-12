@@ -9,5 +9,5 @@ import java.util.Optional;
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
 
     List<Schedule> findByDeletedAtIsNull();
-    Optional<Schedule> findByIdAndDeletedAtIsNull();
+    Optional<Schedule> findByIdAndDeletedAtIsNull(Long id);
 }

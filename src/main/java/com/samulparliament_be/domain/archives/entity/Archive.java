@@ -33,6 +33,7 @@ public class Archive extends BaseEntity {
     @Column(nullable = false)
     private LocalDate date;
 
+    @Enumerated(EnumType.STRING)
     @Column(length = 25, nullable = false)
     private FileType type;
 
@@ -50,7 +51,7 @@ public class Archive extends BaseEntity {
         name = "archive_tags",
         joinColumns = @JoinColumn(name = "archive_id")
     )
-    @Column(name = "tags")
+    @Column(name = "tag")
     private Set<String> tags;
 
     public enum FileType {
