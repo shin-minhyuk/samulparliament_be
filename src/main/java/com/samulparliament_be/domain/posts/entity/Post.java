@@ -35,4 +35,10 @@ public class Post extends BaseEntity {
 
     @Column(nullable = false)
     private String authorEmail;
+
+    public void update(String title, String content, String imageUrl) {
+        this.title = title;
+        this.content = content;
+        this.imageUrl = imageUrl;
+    }
 }
