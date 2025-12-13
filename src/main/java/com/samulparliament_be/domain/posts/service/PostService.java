@@ -3,6 +3,8 @@ package com.samulparliament_be.domain.posts.service;
 import com.samulparliament_be.domain.posts.entity.Post;
 import com.samulparliament_be.domain.posts.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,8 +24,8 @@ public class PostService {
 
     // READ
     @Transactional(readOnly = true)
-    public List<Post> getAll() {
-        return postRepository.findByDeletedAtIsNull();
+    public Page<Post> getAll(Pageable pageable) {
+        return postRepository.findByDeletedAtIsNull(pageable);
     }
 
     // READ
