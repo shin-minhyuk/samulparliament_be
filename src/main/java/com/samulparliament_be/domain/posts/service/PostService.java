@@ -1,7 +1,11 @@
 package com.samulparliament_be.domain.posts.service;
 
+import com.samulparliament_be.domain.posts.dto.PostCreateRequest;
+import com.samulparliament_be.domain.posts.dto.PostUpdateRequest;
 import com.samulparliament_be.domain.posts.entity.Post;
 import com.samulparliament_be.domain.posts.repository.PostRepository;
+import com.samulparliament_be.domain.users.entity.User;
+import com.samulparliament_be.domain.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,9 +20,22 @@ import java.util.List;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
 
     // CREATE
-    public Post create(Post post) {
+    public Post create(Long authorId, PostCreateRequest request) {
+        User author = userRepository.findById(authorId)
+                .orElseThrow();
+
+        Post post = Post.builder()
+                .title(request.title())
+                .content(request.content())
+                .imageUrl(request.imageUrl())
+                .author(author)
+                .authorName(author.getName())
+                .authorEmail(author.getEmail())
+                .build();
+
         return postRepository.save(post);
     }
 
@@ -36,11 +53,13 @@ public class PostService {
     }
 
     // UPDATE
-    public Post update(Long id, String title, String content, String imageUrl) {
+    public Post update(Long id, PostUpdateRequest request) {
         Post post = postRepository.findByIdAndDeletedAtIsNull(id)
                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
 
-        post.update(title, content, imageUrl);
+        post.update(request.title(), request.content(), request.imageUrl());
+
+        // save() 안 해도 됨 (dirty checking)
         return post;
     }
 
