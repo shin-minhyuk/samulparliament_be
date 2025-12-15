@@ -28,7 +28,24 @@ public class AuthService {
         String accessToken = jwtTokenProvider.createAccessToken(user);
         String refreshToken = jwtTokenProvider.createRefreshToken(user);
 
-        return new LoginResponse(user.getId(), accessToken, refreshToken);
+        // 기존 RefreshToken 삭제 (단일 세션 정책)
+        refreshTokenRepository.deleteByUserId((user.getId()));
+
+        // refreshToken 기반 refreshToken Entity 생성
+        RefreshToken refreshTokenEntity = RefreshToken.create(user, refreshToken, 14);// 14일
+
+        // refreshToken 기반 생성된 Entity DB 저장
+        refreshTokenRepository.save(refreshTokenEntity);
+
+        return new LoginResponse(
+                user.getId(),
+                accessToken,
+                refreshToken
+        );
+    }
+
+    public void logout(Long userId) {
+        refreshTokenRepository.deleteByUserId(userId);
     }
 
     public LoginResponse refresh(String refreshToken) {
@@ -43,6 +60,10 @@ public class AuthService {
         User user = tokenEntity.getUser();
         String newAccessToken = jwtTokenProvider.createAccessToken(user);
 
-        return new LoginResponse(user.getId(), newAccessToken, refreshToken);
+        return new LoginResponse(
+                user.getId(),
+                newAccessToken,
+                refreshToken
+        );
     }
 }
