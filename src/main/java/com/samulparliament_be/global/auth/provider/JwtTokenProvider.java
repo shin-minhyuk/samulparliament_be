@@ -2,6 +2,7 @@ package com.samulparliament_be.global.auth.provider;
 
 import com.samulparliament_be.domain.users.entity.User;
 import com.samulparliament_be.domain.users.service.UserService;
+import com.samulparliament_be.global.auth.details.UserDetailsImpl;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -10,14 +11,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -90,10 +89,12 @@ public class JwtTokenProvider {
 
         User user = userService.getById(userId);
 
+        UserDetailsImpl userDetails = new UserDetailsImpl(user);
+
         return new UsernamePasswordAuthenticationToken(
-                user,
+                userDetails,                 // ✅ UserDetails
                 null,
-                List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()))
+                userDetails.getAuthorities() // ✅ 권한도 UserDetails에서
         );
     }
 }

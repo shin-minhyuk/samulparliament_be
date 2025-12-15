@@ -3,6 +3,7 @@ package com.samulparliament_be.domain.users.controller;
 import com.samulparliament_be.domain.users.dto.UserResponse;
 import com.samulparliament_be.domain.users.entity.User;
 import com.samulparliament_be.domain.users.service.UserService;
+import com.samulparliament_be.global.auth.details.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +27,7 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public UserResponse getMe(@AuthenticationPrincipal User user) {
-        return UserResponse.from(user);
+    public UserResponse getMe(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return UserResponse.from(userDetails.getUser());
     }
 }
