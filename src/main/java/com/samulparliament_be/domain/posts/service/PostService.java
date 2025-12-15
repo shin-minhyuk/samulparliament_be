@@ -74,4 +74,12 @@ public class PostService {
 
         post.softDelete();
     }
+
+    // ADMIN DELETE
+    public void forceDelete(Long id) {
+        Post post = postRepository.findByIdAndDeletedAtIsNull(id)
+                .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
+
+        post.softDelete();
+    }
 }
