@@ -1,5 +1,6 @@
 package com.samulparliament_be.global.auth;
 
+import com.samulparliament_be.domain.users.dto.AuthProvider;
 import com.samulparliament_be.domain.users.entity.RefreshToken;
 import com.samulparliament_be.domain.users.entity.User;
 import com.samulparliament_be.domain.users.repository.RefreshTokenRepository;
@@ -21,9 +22,9 @@ public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
 
-    public LoginResponse login(String email, String name) {
+    public LoginResponse login(String email, String name, AuthProvider provider) {
         User user = userRepository.findByEmail(email)
-                .orElseGet(() -> userRepository.save(User.create(email, name)));
+                .orElseGet(() -> userRepository.save(User.create(email, name, provider)));
 
         String accessToken = jwtTokenProvider.createAccessToken(user);
         String refreshToken = jwtTokenProvider.createRefreshToken(user);

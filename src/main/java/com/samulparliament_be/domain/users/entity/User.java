@@ -1,6 +1,7 @@
 package com.samulparliament_be.domain.users.entity;
 
 import com.samulparliament_be.domain.common.entity.BaseEntity;
+import com.samulparliament_be.domain.users.dto.AuthProvider;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,14 +27,18 @@ public class User extends BaseEntity {
     @Builder.Default
     private Role role = Role.USER;
 
+    @Enumerated(EnumType.STRING)
+    private AuthProvider provider;
+
     public enum Role {
         USER, ADMIN
     }
 
-    public static User create(String email, String name) {
+    public static User create(String email, String name, AuthProvider provider) {
         return User.builder()
                 .email(email)
                 .name(name)
+                .provider(provider)
                 .role(Role.USER)
                 .build();
     }

@@ -30,7 +30,8 @@ public class AuthController {
 
         return authService.login(
                 userInfo.email(),
-                userInfo.name()
+                userInfo.name(),
+                userInfo.provider()
         );
     }
 
