@@ -40,4 +40,9 @@ public class RefreshToken {
                 .expiresAt(now.plusDays(days))
                 .build();
     }
+
+    public void update(String token, LocalDateTime expiresAt) {
+        this.token = token;
+        this.expiresAt = expiresAt;
+    }
 }

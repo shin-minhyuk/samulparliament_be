@@ -28,13 +28,20 @@ public class AuthService {
         String accessToken = jwtTokenProvider.createAccessToken(user);
         String refreshToken = jwtTokenProvider.createRefreshToken(user);
 
-        // 기존 RefreshToken 삭제 (단일 세션 정책)
-        refreshTokenRepository.deleteByUserId((user.getId()));
+        LocalDateTime expiresAt =
+                LocalDateTime.now().plusDays(14);
 
         // refreshToken 기반 refreshToken Entity 생성
-        RefreshToken refreshTokenEntity = RefreshToken.create(user, refreshToken, 14);// 14일
+        RefreshToken refreshTokenEntity =
+                refreshTokenRepository.findByUser(user)
+                        .map(existing -> {
+                            existing.update(refreshToken, expiresAt);
+                            return existing;
+                        })
+                        .orElse(
+                                RefreshToken.create(user, refreshToken, 14)
+                        );
 
-        // refreshToken 기반 생성된 Entity DB 저장
         refreshTokenRepository.save(refreshTokenEntity);
 
         return new LoginResponse(

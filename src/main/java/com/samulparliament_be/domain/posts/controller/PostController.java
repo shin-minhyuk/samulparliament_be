@@ -5,6 +5,7 @@ import com.samulparliament_be.domain.posts.dto.PostCreateRequest;
 import com.samulparliament_be.domain.posts.dto.PostResponse;
 import com.samulparliament_be.domain.posts.dto.PostUpdateRequest;
 import com.samulparliament_be.domain.posts.service.PostService;
+import com.samulparliament_be.global.auth.details.UserDetailsImpl;
 import com.samulparliament_be.global.common.dto.PageResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,10 +25,11 @@ public class PostController {
 
     @PostMapping
     public PostResponse create(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
             @Valid @RequestBody PostCreateRequest request
     ) {
         return PostResponse.from(
-                postService.create(request.authorId(), request)
+                postService.create(userDetails.getUser(), request)
         );
     }
 
@@ -69,7 +72,7 @@ public class PostController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(Long id) {
+    public void delete(@PathVariable Long id) {
         postService.delete(id);
     }
 }

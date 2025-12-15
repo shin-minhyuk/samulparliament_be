@@ -1,7 +1,6 @@
 package com.samulparliament_be.domain.posts.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 /**
  * 게시글을 생성하기 위한 요청 DTO
@@ -11,10 +10,6 @@ import jakarta.validation.constraints.NotNull;
  * @param imageUrl 게시글 대표 이미지 URL
  */
 public record PostCreateRequest(
-        // TODO: 인증 적용 후 authorId 제거 (AuthenticationPrincipal 사용)
-        @NotNull
-        Long authorId,
-
         @NotBlank(message = "제목은 필수입니다.")
         String title,
 

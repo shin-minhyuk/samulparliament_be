@@ -5,14 +5,11 @@ import com.samulparliament_be.domain.posts.dto.PostUpdateRequest;
 import com.samulparliament_be.domain.posts.entity.Post;
 import com.samulparliament_be.domain.posts.repository.PostRepository;
 import com.samulparliament_be.domain.users.entity.User;
-import com.samulparliament_be.domain.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,12 +17,9 @@ import java.util.List;
 public class PostService {
 
     private final PostRepository postRepository;
-    private final UserRepository userRepository;
 
     // CREATE
-    public Post create(Long authorId, PostCreateRequest request) {
-        User author = userRepository.findById(authorId)
-                .orElseThrow();
+    public Post create(User author, PostCreateRequest request) {
 
         Post post = Post.builder()
                 .title(request.title())
