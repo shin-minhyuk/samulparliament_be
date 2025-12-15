@@ -8,7 +8,6 @@ import com.samulparliament_be.domain.posts.service.PostService;
 import com.samulparliament_be.global.common.dto.PageResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
