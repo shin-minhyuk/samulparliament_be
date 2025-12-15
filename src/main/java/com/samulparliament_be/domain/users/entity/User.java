@@ -22,10 +22,20 @@ public class User extends BaseEntity {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    private Role role;
+    @Column(nullable = false)
+    @Builder.Default
+    private Role role = Role.USER;
 
     public enum Role {
         USER, ADMIN
+    }
+
+    public static User create(String email, String name) {
+        return User.builder()
+                .email(email)
+                .name(name)
+                .role(Role.USER)
+                .build();
     }
 }
 
