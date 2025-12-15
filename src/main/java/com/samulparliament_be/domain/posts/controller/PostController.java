@@ -5,6 +5,7 @@ import com.samulparliament_be.domain.posts.dto.PostCreateRequest;
 import com.samulparliament_be.domain.posts.dto.PostResponse;
 import com.samulparliament_be.domain.posts.dto.PostUpdateRequest;
 import com.samulparliament_be.domain.posts.service.PostService;
+import com.samulparliament_be.global.common.dto.PageResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
@@ -31,7 +32,7 @@ public class PostController {
     }
 
     @GetMapping
-    public Page<PostResponse> getAll(
+    public PageResponse<PostResponse> getAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "DESC") OrderType order
@@ -46,9 +47,9 @@ public class PostController {
                 )
         );
 
-        return postService.getAll(pageable)
-                .map(PostResponse::from);
-        //      .map(post -> PostResponse.from(post))
+        Page<PostResponse> postPage = postService.getAll(pageable).map(PostResponse::from);
+
+        return PageResponse.from(postPage);
     }
 
     @GetMapping("/{id}")
