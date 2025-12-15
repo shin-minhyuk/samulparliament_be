@@ -64,15 +64,16 @@ public class PostController {
     @PutMapping("/{id}")
     public PostResponse update(
             @PathVariable Long id,
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestBody PostUpdateRequest request
     ) {
         return PostResponse.from(
-                postService.update(id, request)
+                postService.update(id, userDetails.getUser(), request)
         );
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        postService.delete(id);
+    public void delete(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id) {
+        postService.delete(id, userDetails.getUser());
     }
 }

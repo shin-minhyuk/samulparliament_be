@@ -47,9 +47,14 @@ public class PostService {
     }
 
     // UPDATE
-    public Post update(Long id, PostUpdateRequest request) {
+    public Post update(Long id, User user, PostUpdateRequest request) {
         Post post = postRepository.findByIdAndDeletedAtIsNull(id)
                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
+
+        // INFO: 작성자 검증
+        if (!post.getAuthor().getId().equals(user.getId())) {
+            throw new SecurityException("게시글 수정 권한이 없습니다.");
+        }
 
         post.update(request.title(), request.content(), request.imageUrl());
 
@@ -58,9 +63,15 @@ public class PostService {
     }
 
     // DELETE
-    public void delete(Long id) {
+    public void delete(Long id, User user) {
         Post post = postRepository.findByIdAndDeletedAtIsNull(id)
                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
+
+        // INFO: 작성자 검증
+        if (!post.getAuthor().getId().equals(user.getId())) {
+            throw new SecurityException("게시글 삭제 권한이 없습니다.");
+        }
+
         post.softDelete();
     }
 }
