@@ -5,6 +5,7 @@ import com.samulparliament_be.global.auth.provider.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -47,14 +48,19 @@ public class SecurityConfig {
 
                 // 3. URL 접근 권한 설정
                 .authorizeHttpRequests(auth -> auth
-                        // 인증 없이 접근 허용 (로그인 / 문서)
+                        // ✅ Swagger
                         .requestMatchers(
-                                "/swagger-ui/**",      // Swagger UI 화면
-                                "/v3/api-docs/**",     // Swagger JSON 문서
-                                "/api/auth/**"         // 로그인 / 토큰 발급 API
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**"
                         ).permitAll()
 
-                        // 그 외 모든 요청은 JWT 인증 필요
+                        // ✅ 인증 관련 API
+                        .requestMatchers("/api/auth/**").permitAll()
+
+                        // ✅ 게시글 조회는 비로그인 허용
+                        .requestMatchers(HttpMethod.GET, "/api/posts/**").permitAll()
+
+                        // ❗ 그 외는 로그인 필수
                         .anyRequest().authenticated()
                 )
 

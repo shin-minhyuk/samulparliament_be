@@ -7,11 +7,17 @@ import com.samulparliament_be.domain.users.repository.RefreshTokenRepository;
 import com.samulparliament_be.domain.users.repository.UserRepository;
 import com.samulparliament_be.global.auth.dto.LoginResponse;
 import com.samulparliament_be.global.auth.provider.JwtTokenProvider;
+import com.samulparliament_be.global.oauth.client.OAuthClient;
+import com.samulparliament_be.global.oauth.dto.OAuthUserInfo;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,28 +28,48 @@ public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
 
-    public LoginResponse login(String email, String name, AuthProvider provider) {
-        User user = userRepository.findByEmail(email)
-                .orElseGet(() -> userRepository.save(User.create(email, name, provider)));
+    private final List<OAuthClient> oauthClients;
+    private Map<AuthProvider, OAuthClient> oauthClientMap;
 
+    @PostConstruct
+    public void init() {
+        oauthClientMap = oauthClients.stream()
+                .collect(Collectors.toMap(
+                        OAuthClient::provider,
+                        client -> client
+                ));
+    }
+
+    public LoginResponse oauthLogin(AuthProvider provider, String code) {
+
+        // 1. provider에 맞는 OAuthClient 선택
+        OAuthClient client = oauthClientMap.get(provider);
+        if (client == null) {
+            throw new IllegalArgumentException("지원하지 않는 OAuth provider");
+        }
+
+        // 2. OAuth 서버에서 사용자 정보 조회
+        OAuthUserInfo userInfo = client.getUserInfo(code);
+
+        // 3. 사용자 조회 or 생성
+        User user = userRepository
+                .findByEmailAndProvider(userInfo.email(), provider)
+                .orElseGet(() ->
+                        userRepository.save(
+                                User.create(
+                                        userInfo.email(),
+                                        userInfo.name(),
+                                        provider
+                                )
+                        )
+                );
+
+        // 4. JWT 발급
         String accessToken = jwtTokenProvider.createAccessToken(user);
         String refreshToken = jwtTokenProvider.createRefreshToken(user);
 
-        LocalDateTime expiresAt =
-                LocalDateTime.now().plusDays(14);
-
-        // refreshToken 기반 refreshToken Entity 생성
-        RefreshToken refreshTokenEntity =
-                refreshTokenRepository.findByUser(user)
-                        .map(existing -> {
-                            existing.update(refreshToken, expiresAt);
-                            return existing;
-                        })
-                        .orElse(
-                                RefreshToken.create(user, refreshToken, 14)
-                        );
-
-        refreshTokenRepository.save(refreshTokenEntity);
+        // 5. RefreshToken 저장/갱신
+        saveOrUpdateRefreshToken(user, refreshToken);
 
         return new LoginResponse(
                 user.getId(),
@@ -73,5 +99,22 @@ public class AuthService {
                 newAccessToken,
                 refreshToken
         );
+    }
+
+    private void saveOrUpdateRefreshToken(User user, String refreshToken) {
+
+        LocalDateTime expiresAt = LocalDateTime.now().plusDays(14);
+
+        RefreshToken tokenEntity =
+                refreshTokenRepository.findByUser(user)
+                        .map(existing -> {
+                            existing.update(refreshToken, expiresAt);
+                            return existing;
+                        })
+                        .orElse(
+                                RefreshToken.create(user, refreshToken, 14)
+                        );
+
+        refreshTokenRepository.save(tokenEntity);
     }
 }
