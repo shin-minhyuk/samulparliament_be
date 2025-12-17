@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,7 +51,7 @@ public class AuthService {
 
         // 2. OAuth 서버에서 사용자 정보 조회
         OAuthUserInfo userInfo = client.getUserInfo(code);
-
+        
         // 3. 사용자 조회 or 생성
         User user = userRepository
                 .findByEmailAndProvider(userInfo.email(), provider)
@@ -59,10 +60,16 @@ public class AuthService {
                                 User.create(
                                         userInfo.email(),
                                         userInfo.name(),
+                                        userInfo.profileImageUrl(),
                                         provider
                                 )
                         )
                 );
+        
+        // [2025-12-17]: 프로필 이미지가 변경된 경우 업데이트
+        if (!Objects.equals(userInfo.profileImageUrl(), user.getProfileImageUrl())) {
+            user.updateProfileImageUrl(userInfo.profileImageUrl());
+        }
 
         // 4. JWT 발급
         String accessToken = jwtTokenProvider.createAccessToken(user);
@@ -73,6 +80,10 @@ public class AuthService {
 
         return new LoginResponse(
                 user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getProfileImageUrl(),
+                user.getProvider(),
                 accessToken,
                 refreshToken
         );
@@ -96,6 +107,10 @@ public class AuthService {
 
         return new LoginResponse(
                 user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getProfileImageUrl(),
+                user.getProvider(),
                 newAccessToken,
                 refreshToken
         );

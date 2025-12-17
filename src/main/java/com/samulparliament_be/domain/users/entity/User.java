@@ -22,6 +22,8 @@ public class User extends BaseEntity {
 
     private String name;
 
+    private String profileImageUrl;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @Builder.Default
@@ -34,13 +36,18 @@ public class User extends BaseEntity {
         USER, ADMIN
     }
 
-    public static User create(String email, String name, AuthProvider provider) {
+    public static User create(String email, String name, String profileImageUrl, AuthProvider provider) {
         return User.builder()
                 .email(email)
                 .name(name)
+                .profileImageUrl(profileImageUrl)
                 .provider(provider)
                 .role(Role.USER)
                 .build();
+    }
+
+    public void updateProfileImageUrl(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
     }
 }
 

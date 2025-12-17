@@ -1,5 +1,6 @@
 package com.samulparliament_be.global.oauth.client;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.samulparliament_be.domain.users.dto.AuthProvider;
 import com.samulparliament_be.global.oauth.dto.OAuthUserInfo;
 import lombok.RequiredArgsConstructor;
@@ -64,8 +65,6 @@ public class KakaoOAuthClient implements OAuthClient {
                 Map.class
         );
 
-        System.out.println((String) response.getBody().get("access_token"));
-
         return (String) response.getBody().get("access_token");
     }
 
@@ -86,6 +85,16 @@ public class KakaoOAuthClient implements OAuthClient {
         );
 
         Map<String, Object> body = response.getBody();
+        
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            String prettyJson = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(body);
+            System.out.println("=== Kakao User Profile Response ===");
+            System.out.println(prettyJson);
+            System.out.println("===================================");
+        } catch (Exception e) {
+            System.out.println("로그 출력 실패: " + e.getMessage());
+        }
 
         Map<String, Object> kakaoAccount =
                 (Map<String, Object>) body.get("kakao_account");
@@ -95,7 +104,8 @@ public class KakaoOAuthClient implements OAuthClient {
 
         String email = (String) kakaoAccount.get("email");
         String name = (String) profile.get("nickname");
+        String profileImageUrl = (String) profile.get("profile_image_url");
 
-        return new OAuthUserInfo(email, name);
+        return new OAuthUserInfo(name, email, profileImageUrl);
     }
 }
