@@ -41,27 +41,32 @@ public class AuthService {
                 ));
     }
 
-    public LoginResponse oauthLogin(AuthProvider provider, String code) {
+    public LoginResponse oauthLogin(String provider, String code) {
 
-        // 1. provider에 맞는 OAuthClient 선택
-        OAuthClient client = oauthClientMap.get(provider);
-        if (client == null) {
+        AuthProvider authProvider;
+        
+        try {
+            authProvider = AuthProvider.valueOf(provider.toUpperCase());
+        } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("지원하지 않는 OAuth provider");
         }
+
+        // 1. provider에 맞는 OAuthClient 선택
+        OAuthClient client = oauthClientMap.get(authProvider);
 
         // 2. OAuth 서버에서 사용자 정보 조회
         OAuthUserInfo userInfo = client.getUserInfo(code);
         
         // 3. 사용자 조회 or 생성
         User user = userRepository
-                .findByEmailAndProvider(userInfo.email(), provider)
+                .findByEmailAndProvider(userInfo.email(), authProvider)
                 .orElseGet(() ->
                         userRepository.save(
                                 User.create(
                                         userInfo.email(),
                                         userInfo.name(),
                                         userInfo.profileImageUrl(),
-                                        provider
+                                        authProvider
                                 )
                         )
                 );

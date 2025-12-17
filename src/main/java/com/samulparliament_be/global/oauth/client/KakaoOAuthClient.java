@@ -2,6 +2,7 @@ package com.samulparliament_be.global.oauth.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.samulparliament_be.domain.users.dto.AuthProvider;
+import com.samulparliament_be.global.oauth.dto.KakaoUserInfoResponse;
 import com.samulparliament_be.global.oauth.dto.OAuthUserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -77,34 +78,18 @@ public class KakaoOAuthClient implements OAuthClient {
 
         HttpEntity<Void> request = new HttpEntity<>(headers);
 
-        ResponseEntity<Map> response = restTemplate.exchange(
+        ResponseEntity<KakaoUserInfoResponse> response = restTemplate.exchange(
                 userInfoUri,
                 HttpMethod.GET,
                 request,
-                Map.class
+                KakaoUserInfoResponse.class
         );
-
-        Map<String, Object> body = response.getBody();
         
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            String prettyJson = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(body);
-            System.out.println("=== Kakao User Profile Response ===");
-            System.out.println(prettyJson);
-            System.out.println("===================================");
-        } catch (Exception e) {
-            System.out.println("로그 출력 실패: " + e.getMessage());
-        }
+        KakaoUserInfoResponse body = response.getBody();
 
-        Map<String, Object> kakaoAccount =
-                (Map<String, Object>) body.get("kakao_account");
-
-        Map<String, Object> profile =
-                (Map<String, Object>) kakaoAccount.get("profile");
-
-        String email = (String) kakaoAccount.get("email");
-        String name = (String) profile.get("nickname");
-        String profileImageUrl = (String) profile.get("profile_image_url");
+        String email = body.kakao_account().email();
+        String name = body.kakao_account().profile().nickname();
+        String profileImageUrl = body.kakao_account().profile().profile_image_url();
 
         return new OAuthUserInfo(name, email, profileImageUrl);
     }

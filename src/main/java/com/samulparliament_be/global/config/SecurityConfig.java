@@ -48,17 +48,21 @@ public class SecurityConfig {
 
                 // 3. URL 접근 권한 설정
                 .authorizeHttpRequests(auth -> auth
-                        // ✅ Swagger
+                        // 1. Swagger
                         .requestMatchers(
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**"
                         ).permitAll()
 
-                        // ✅ 인증 관련 API
-                        .requestMatchers("/api/auth/**").permitAll()
 
-                        // ✅ 게시글 조회는 비로그인 허용
-                        .requestMatchers(HttpMethod.GET, "/api/posts/**").permitAll()
+                        // 2. 인증 API 로그인 만 공개
+                        .requestMatchers(HttpMethod.POST, "/api/auth/login/**").permitAll()
+
+                        // 3. 민감한 GET 경로는 먼저 차단
+                        .requestMatchers(HttpMethod.GET, "/api/admin/**").authenticated()
+
+                        // 4. 모든 GET은 공개
+                        .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
 
                         // ❗ 그 외는 로그인 필수
                         .anyRequest().authenticated()

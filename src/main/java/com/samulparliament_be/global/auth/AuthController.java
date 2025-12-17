@@ -18,10 +18,7 @@ public class AuthController {
     @PostMapping("/login/{provider}")
     public LoginResponse oauthLogin(@PathVariable String provider, @RequestParam("code") String code) {
 
-        AuthProvider authProvider =
-                AuthProvider.valueOf(provider.toUpperCase());
-
-        return authService.oauthLogin(authProvider, code);
+        return authService.oauthLogin(provider, code);
     }
 
     @PostMapping("/logout")
