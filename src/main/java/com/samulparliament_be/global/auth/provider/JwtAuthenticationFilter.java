@@ -43,38 +43,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             HttpServletResponse response, // 현재 HTTP 응답
             FilterChain filterChain       // 다음 필터 또는 컨트롤러로 넘기기 위한 체인
     ) throws ServletException, IOException {
-//        WARNING: 잘못된 코드, JwtAuthenticationFilter 에서는 토큰 있으면 인증 처리만 하도록 해야함.
-//                 뭐가 잘못된건지 정확하게 이해되면 삭제
-//
-//        String uri = request.getRequestURI();
-//
-//        // JWT 검사 제외
-//        if (
-//                uri.startsWith("/api/auth/login") || (uri.startsWith("/api/posts") && request.getMethod().equals("GET"))
-//        ) {
-//            filterChain.doFilter(request, response);
-//            return;
-//        }
-//
-//
-//        // 1. HTTP 요청 헤더에서 JWT 토큰을 추출
-//        String token = resolveToken(request);
-//
-//        // 2. 토큰이 존재하고, 유효하다면
-//        if (token != null && jwtTokenProvider.validateToken(token)) {
-//
-//            // 3. 토큰을 기반으로 Authentication 객체 생성
-//            Authentication authentication =
-//                    jwtTokenProvider.getAuthentication(token);
-//
-//            // 4. Spring Security에게 "이 요청은 인증된 사용자"라고 알려줌
-//            SecurityContextHolder.getContext()
-//                    .setAuthentication(authentication);
-//        }
-//
-//        // 5. 다음 필터 또는 컨트롤러로 요청을 넘김
-//        filterChain.doFilter(request, response);
-
         // 1. Authorization 헤더에서 토큰 추출
         String token = resolveToken(request);
 
