@@ -11,37 +11,31 @@ import java.util.List;
 @Configuration
 public class CorsConfig {
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
+        @Bean
+        public CorsConfigurationSource corsConfigurationSource() {
 
-        CorsConfiguration config = new CorsConfiguration();
+                CorsConfiguration config = new CorsConfiguration();
 
-        // 프론트엔드 도메인 허용
-        config.setAllowedOrigins(List.of(
-                "http://localhost:3000",          // 로컬 개발
-                "https://samulparliament.com"     // 실제 프론트
-        ));
+                // 프론트엔드 도메인 허용
+                config.setAllowedOrigins(List.of("http://localhost:3000", // 로컬 개발
+                                "http://localhost:3001", // 로컬 개발
+                                "https://samulparliament.com" // 실제 프론트
+                ));
 
-        // 허용할 HTTP 메서드
-        config.setAllowedMethods(List.of(
-                "GET", "POST", "PUT", "DELETE", "OPTIONS"
-        ));
+                // 허용할 HTTP 메서드
+                config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 
-        // 허용할 헤더
-        config.setAllowedHeaders(List.of(
-                "Authorization",
-                "Content-Type"
-        ));
+                // 허용할 헤더
+                config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
 
-        // Authorization 헤더(JWT) 허용
-        config.setAllowCredentials(true);
+                // Authorization 헤더(JWT) 허용
+                config.setAllowCredentials(true);
 
-        // 모든 경로에 적용
-        UrlBasedCorsConfigurationSource source =
-                new UrlBasedCorsConfigurationSource();
+                // 모든 경로에 적용
+                UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 
-        source.registerCorsConfiguration("/**", config);
+                source.registerCorsConfiguration("/**", config);
 
-        return source;
-    }
+                return source;
+        }
 }

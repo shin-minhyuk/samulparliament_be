@@ -61,15 +61,10 @@ public class KakaoOAuthClient implements OAuthClient {
         params.add("redirect_uri", redirectUri);
         params.add("code", code);
 
-        HttpEntity<MultiValueMap<String, String>> request =
-                new HttpEntity<>(params, headers);
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
 
         try {
-            ResponseEntity<Map> response = restTemplate.postForEntity(
-                    tokenUri,
-                    request,
-                    Map.class
-            );
+            ResponseEntity<Map> response = restTemplate.postForEntity(tokenUri, request, Map.class);
 
             String accessToken = (String) response.getBody().get("access_token");
             log.info("[OAUTH] 카카오 토큰 발급 성공");
@@ -90,13 +85,9 @@ public class KakaoOAuthClient implements OAuthClient {
         HttpEntity<Void> request = new HttpEntity<>(headers);
 
         try {
-            ResponseEntity<KakaoUserInfoResponse> response = restTemplate.exchange(
-                    userInfoUri,
-                    HttpMethod.GET,
-                    request,
-                    KakaoUserInfoResponse.class
-            );
-            
+            ResponseEntity<KakaoUserInfoResponse> response = restTemplate.exchange(userInfoUri,
+                    HttpMethod.GET, request, KakaoUserInfoResponse.class);
+
             KakaoUserInfoResponse body = response.getBody();
 
             String email = body.kakao_account().email();
