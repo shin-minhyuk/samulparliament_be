@@ -26,12 +26,17 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "author_id")
     private User author;
 
-    @Column(length = 50, nullable = false)
-    private String author_name;
+    @Column(name = "author_name", length = 50, nullable = false)
+    private String authorName;
 
-    @Column(nullable = false)
-    private String author_email;
+    @Column(name = "author_email", nullable = false)
+    private String authorEmail;
 
     @Column(columnDefinition = "text", nullable = false)
     private String content;
+
+    public static Comment create(User author, Post post, String content) {
+        return Comment.builder().author(author).post(post).authorName(author.getName())
+                .authorEmail(author.getEmail()).content(content).build();
+    }
 }

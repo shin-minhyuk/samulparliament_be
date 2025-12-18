@@ -36,14 +36,10 @@ public class User extends BaseEntity {
         USER, ADMIN
     }
 
-    public static User create(String email, String name, String profileImageUrl, AuthProvider provider) {
-        return User.builder()
-                .email(email)
-                .name(name)
-                .profileImageUrl(profileImageUrl)
-                .provider(provider)
-                .role(Role.USER)
-                .build();
+    public static User create(String email, String name, String profileImageUrl,
+            AuthProvider provider) {
+        return User.builder().email(email).name(name).profileImageUrl(profileImageUrl)
+                .provider(provider).role(Role.USER).build();
     }
 
     public void updateProfileImageUrl(String profileImageUrl) {
