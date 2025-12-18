@@ -3,6 +3,7 @@ package com.samulparliament_be.domain.faqs.entity;
 import com.samulparliament_be.domain.common.entity.BaseEntity;
 import com.samulparliament_be.domain.users.entity.User;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,8 +12,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "faqs")
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 public class Faq extends BaseEntity {
 

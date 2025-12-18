@@ -54,7 +54,9 @@ public enum ErrorCode {
     /** [COMMENT002] 403 Forbidden - 댓글 수정 권한이 없습니다 */
     COMMENT_UPDATE_FORBIDDEN("COMMENT002", "댓글 수정 권한이 없습니다", HttpStatus.FORBIDDEN),
     /** [COMMENT003] 403 Forbidden - 댓글 삭제 권한이 없습니다 */
-    COMMENT_DELETE_FORBIDDEN("COMMENT003", "댓글 삭제 권한이 없습니다", HttpStatus.FORBIDDEN);
+    COMMENT_DELETE_FORBIDDEN("COMMENT003", "댓글 삭제 권한이 없습니다", HttpStatus.FORBIDDEN),
+    /** [COMMENT004] 400 Bad Request - 대댓글에는 답글을 달 수 없습니다 */
+    REPLY_DEPTH_EXCEEDED("COMMENT004", "대댓글에는 답글을 달 수 없습니다", HttpStatus.BAD_REQUEST);
 
     private final String code;
     private final String message;
