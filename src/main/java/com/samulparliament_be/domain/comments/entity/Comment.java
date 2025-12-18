@@ -1,5 +1,6 @@
 package com.samulparliament_be.domain.comments.entity;
 
+import java.time.LocalDateTime;
 import com.samulparliament_be.domain.common.entity.BaseEntity;
 import com.samulparliament_be.domain.posts.entity.Post;
 import com.samulparliament_be.domain.users.entity.User;
@@ -36,7 +37,22 @@ public class Comment extends BaseEntity {
     private String content;
 
     public static Comment create(User author, Post post, String content) {
-        return Comment.builder().author(author).post(post).authorName(author.getName())
-                .authorEmail(author.getEmail()).content(content).build();
+        return Comment.builder()
+                            .author(author)
+                            .post(post)
+                            .authorName(author.getName())
+                            .authorEmail(author.getEmail())
+                            .content(content)
+                            .build();
+    }
+
+    public Comment update(String content) {
+        this.content = content;
+        this.updatedAt = LocalDateTime.now();
+        return this;
+    }
+
+    public void delete() {
+        this.deletedAt = LocalDateTime.now();
     }
 }

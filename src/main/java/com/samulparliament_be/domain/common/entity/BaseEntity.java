@@ -21,12 +21,12 @@ public abstract class BaseEntity {
     @Column(name = "deleted_at")
     protected  LocalDateTime deletedAt;
 
-    @PrePersist
+    @PrePersist // DB에 저장되기 직전 실행 어노테이션
     public void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
 
-    @PreUpdate
+    @PreUpdate // DB가 수정되기 직전 실행 어노테이션
     public void onUpdate() {
         if (this.deletedAt == null) {
             this.updatedAt = LocalDateTime.now();

@@ -33,21 +33,24 @@ public class CommentService {
 		return CommentResponse.from(comment);
 	}
 
-	// public CommentResponse update(User user, Long commentId, CommentRequest request) {
-	// Comment comment = commentRepository.findByIdAndDeletedAtIsNull(commentId)
-	// .orElseThrow(() -> new BusinessException(ErrorCode.COMMENT_NOT_FOUND));
+	public CommentResponse update(User user, Long commentId, CommentRequest request) {
+		Comment comment = commentRepository.findByIdAndDeletedAtIsNull(commentId)
+				.orElseThrow(() -> new BusinessException(ErrorCode.COMMENT_NOT_FOUND));
 
-	// comment.update(request.content());
-	// commentRepository.save(comment);
+		comment.update(request.content());
+		commentRepository.save(comment);
 
-	// return CommentResponse.from(comment);
-	// }
+		return CommentResponse.from(comment);
+	}
 
-	// public void delete(User user, Long commentId) {
-	// Comment comment = commentRepository.findByIdAndDeletedAtIsNull(commentId)
-	// .orElseThrow(() -> new BusinessException(ErrorCode.COMMENT_NOT_FOUND));
+	public void delete(User user, Long commentId) {
+		Comment comment = commentRepository.findByIdAndDeletedAtIsNull(commentId)
+				.orElseThrow(() -> new BusinessException(ErrorCode.COMMENT_NOT_FOUND));
 
-	// comment.delete();
-	// commentRepository.save(comment);
-	// }
+		if (!comment.getAuthor().getId().equals(user.getId())) {
+			throw new BusinessException(ErrorCode.COMMENT_DELETE_FORBIDDEN);
+		}
+
+		comment.softDelete();
+	}
 }
