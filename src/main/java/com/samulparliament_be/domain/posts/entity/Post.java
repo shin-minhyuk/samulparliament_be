@@ -1,6 +1,7 @@
 package com.samulparliament_be.domain.posts.entity;
 
 import com.samulparliament_be.domain.common.entity.BaseEntity;
+import com.samulparliament_be.domain.posts.dto.PostCreateRequest;
 import com.samulparliament_be.domain.users.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -35,6 +36,17 @@ public class Post extends BaseEntity {
 
     @Column(nullable = false)
     private String authorEmail;
+
+    public static Post create(User author, PostCreateRequest request) {
+        return Post.builder()
+                        .title(request.title())
+                        .content(request.content())
+                        .imageUrl(request.imageUrl())
+                        .author(author)
+                        .authorName(author.getName())
+                        .authorEmail(author.getEmail())
+                        .build();
+        }
 
     public void update(String title, String content, String imageUrl) {
         this.title = title;

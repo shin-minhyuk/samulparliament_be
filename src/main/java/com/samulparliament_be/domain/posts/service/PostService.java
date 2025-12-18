@@ -24,14 +24,7 @@ public class PostService {
 
     // CREATE
     public Post create(User author, PostCreateRequest request) {
-        Post post = Post.builder()
-                .title(request.title())
-                .content(request.content())
-                .imageUrl(request.imageUrl())
-                .author(author)
-                .authorName(author.getName())
-                .authorEmail(author.getEmail())
-                .build();
+        Post post = Post.create(author, request);
 
         Post saved = postRepository.save(post);
         log.info("[POST] 게시글 생성 | postId={} authorId={}", saved.getId(), author.getId());
