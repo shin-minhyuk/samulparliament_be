@@ -1,7 +1,9 @@
 package com.samulparliament_be.domain.comments.controller;
 
+import java.util.List;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.samulparliament_be.domain.comments.dto.CommentRequest;
 import com.samulparliament_be.domain.comments.dto.CommentResponse;
 import com.samulparliament_be.domain.comments.service.CommentService;
+import com.samulparliament_be.global.auth.annotation.ALL;
 import com.samulparliament_be.global.auth.annotation.USER;
 import com.samulparliament_be.global.auth.details.UserDetailsImpl;
 
@@ -23,6 +26,13 @@ import lombok.RequiredArgsConstructor;
 public class CommentController {
 
     private final CommentService commentService;
+
+    @ALL
+    @GetMapping
+    public List<CommentResponse> getAllComments(
+            @PathVariable Long postId) {
+        return commentService.getAllComments(postId);
+    }
 
     // 최상위 댓글 생성
     @USER

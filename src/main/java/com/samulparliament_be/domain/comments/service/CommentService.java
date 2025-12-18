@@ -1,5 +1,6 @@
 package com.samulparliament_be.domain.comments.service;
 
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,16 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
+
+	public List<CommentResponse> getAllComments(Long postId) {
+		Post post = postRepository.findByIdAndDeletedAtIsNull(postId)
+				.orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
+
+		return commentRepository.findByPostAndDeletedAtIsNull(post)
+				.stream()
+				.map(CommentResponse::from)
+				.toList();
+	}
 
     // 최상위 댓글 생성
     public CommentResponse create(User user, Long postId, CommentRequest request) {
