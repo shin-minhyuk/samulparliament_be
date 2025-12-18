@@ -1,6 +1,6 @@
 package com.samulparliament_be.domain.users.entity;
 
-import com.samulparliament_be.domain.common.entity.BaseEntity;
+import com.samulparliament_be.global.common.entity.BaseEntity;
 import com.samulparliament_be.domain.users.dto.AuthProvider;
 import jakarta.persistence.*;
 import lombok.*;

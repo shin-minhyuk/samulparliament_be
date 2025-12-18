@@ -3,6 +3,7 @@ package com.samulparliament_be.global.oauth.client;
 import com.samulparliament_be.domain.users.dto.AuthProvider;
 import com.samulparliament_be.global.exception.BusinessException;
 import com.samulparliament_be.global.exception.ErrorCode;
+import com.samulparliament_be.global.oauth.dto.KakaoTokenResponse;
 import com.samulparliament_be.global.oauth.dto.KakaoUserInfoResponse;
 import com.samulparliament_be.global.oauth.dto.OAuthUserInfo;
 import lombok.RequiredArgsConstructor;
@@ -14,8 +15,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -55,6 +54,7 @@ public class KakaoOAuthClient implements OAuthClient {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
+        // Map<String, List<String>>
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
         params.add("client_id", clientId);
@@ -64,9 +64,10 @@ public class KakaoOAuthClient implements OAuthClient {
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
 
         try {
-            ResponseEntity<Map> response = restTemplate.postForEntity(tokenUri, request, Map.class);
+            ResponseEntity<KakaoTokenResponse> response = restTemplate.postForEntity(tokenUri, request,
+                    KakaoTokenResponse.class);
 
-            String accessToken = (String) response.getBody().get("access_token");
+            String accessToken = response.getBody().access_token();
             log.info("[OAUTH] 카카오 토큰 발급 성공");
             return accessToken;
         } catch (RestClientException e) {

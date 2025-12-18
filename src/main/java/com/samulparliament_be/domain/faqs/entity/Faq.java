@@ -1,6 +1,6 @@
 package com.samulparliament_be.domain.faqs.entity;
 
-import com.samulparliament_be.domain.common.entity.BaseEntity;
+import com.samulparliament_be.global.common.entity.BaseEntity;
 import com.samulparliament_be.domain.users.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.samulparliament_be.domain.common.entity.BaseEntity;
+import com.samulparliament_be.global.common.entity.BaseEntity;
 import com.samulparliament_be.domain.posts.entity.Post;
 import com.samulparliament_be.domain.users.entity.User;
 import jakarta.persistence.*;

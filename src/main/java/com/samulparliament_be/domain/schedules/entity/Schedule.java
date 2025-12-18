@@ -1,6 +1,6 @@
 package com.samulparliament_be.domain.schedules.entity;
 
-import com.samulparliament_be.domain.common.entity.BaseEntity;
+import com.samulparliament_be.global.common.entity.BaseEntity;
 import com.samulparliament_be.domain.users.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -30,12 +30,15 @@ public class Schedule extends BaseEntity {
     @Column(columnDefinition = "text", nullable = false)
     private String description;
 
-    @Column(nullable = false)
-    private LocalDate date;
+    @Column(name = "scheduled_date", nullable = false)
+    private LocalDate scheduledDate;
 
-    private LocalTime start_time;
-    private LocalTime end_time;
+    @Column(name = "start_time")
+    private LocalTime startTime;
 
-    @Column(nullable = false)
-    private boolean is_important;
+    @Column(name = "end_time")
+    private LocalTime endTime;
+
+    @Column(name = "is_important", nullable = false)
+    private boolean isImportant;
 }

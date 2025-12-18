@@ -1,4 +1,4 @@
-package com.samulparliament_be.domain.common.entity;
+package com.samulparliament_be.global.common.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;

@@ -1,6 +1,5 @@
 package com.samulparliament_be.domain.posts.controller;
 
-import com.samulparliament_be.domain.posts.dto.OrderType;
 import com.samulparliament_be.domain.posts.dto.PostCreateRequest;
 import com.samulparliament_be.domain.posts.dto.PostResponse;
 import com.samulparliament_be.domain.posts.dto.PostUpdateRequest;
@@ -8,6 +7,7 @@ import com.samulparliament_be.domain.posts.service.PostService;
 import com.samulparliament_be.global.auth.annotation.ALL;
 import com.samulparliament_be.global.auth.annotation.USER;
 import com.samulparliament_be.global.auth.details.UserDetailsImpl;
+import com.samulparliament_be.global.common.dto.OrderType;
 import com.samulparliament_be.global.common.dto.PageResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
