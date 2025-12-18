@@ -1,6 +1,5 @@
 package com.samulparliament_be.global.auth;
 
-import com.samulparliament_be.domain.users.dto.AuthProvider;
 import com.samulparliament_be.global.auth.annotation.ALL;
 import com.samulparliament_be.global.auth.annotation.USER;
 import com.samulparliament_be.global.auth.details.UserDetailsImpl;
