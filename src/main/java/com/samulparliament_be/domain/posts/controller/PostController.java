@@ -27,19 +27,21 @@ public class PostController {
 
         @USER
         @PostMapping
-        public PostResponse create(@AuthenticationPrincipal UserDetailsImpl userDetails,
+        public PostResponse create(
+                        @AuthenticationPrincipal UserDetailsImpl userDetails,
                         @Valid @RequestBody PostCreateRequest request) {
                 return PostResponse.from(postService.create(userDetails.getUser(), request));
         }
 
         @ALL
         @GetMapping
-        public PageResponse<PostResponse> getAll(@RequestParam(defaultValue = "0") int page,
+        public PageResponse<PostResponse> getAll(
+                        @RequestParam(defaultValue = "0") int page,
                         @RequestParam(defaultValue = "10") int size,
                         @RequestParam(defaultValue = "DESC") OrderType order) {
                 Pageable pageable =
                                 PageRequest.of(page, size,
-                                                Sort.by(order == OrderType.ASC ? Sort.Direction.ASC
+                                Sort.by(order == OrderType.ASC ? Sort.Direction.ASC
                                                                 : Sort.Direction.DESC,
                                                                 "createdAt"));
 
@@ -56,7 +58,8 @@ public class PostController {
 
         @USER
         @PutMapping("/{id}")
-        public PostResponse update(@PathVariable Long id,
+        public PostResponse update(
+                        @PathVariable Long id,
                         @AuthenticationPrincipal UserDetailsImpl userDetails,
                         @RequestBody PostUpdateRequest request) {
                 return PostResponse.from(postService.update(id, userDetails.getUser(), request));
@@ -64,7 +67,8 @@ public class PostController {
 
         @USER
         @DeleteMapping("/{id}")
-        public void delete(@AuthenticationPrincipal UserDetailsImpl userDetails,
+        public void delete(
+                        @AuthenticationPrincipal UserDetailsImpl userDetails,
                         @PathVariable Long id) {
                 postService.delete(id, userDetails.getUser());
         }

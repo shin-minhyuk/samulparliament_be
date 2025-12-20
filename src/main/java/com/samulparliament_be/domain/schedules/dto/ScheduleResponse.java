@@ -1,6 +1,7 @@
 package com.samulparliament_be.domain.schedules.dto;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import com.samulparliament_be.domain.schedules.entity.Schedule;
 
@@ -11,7 +12,9 @@ public record ScheduleResponse(
     LocalDate scheduledDate,
     LocalTime startTime,
     LocalTime endTime,
-    boolean isImportant
+    boolean isImportant,
+    LocalDateTime createdAt,
+    LocalDateTime updatedAt
 ) {
     public static ScheduleResponse from(Schedule schedule) {
         return new ScheduleResponse(
@@ -21,7 +24,10 @@ public record ScheduleResponse(
             schedule.getScheduledDate(),
             schedule.getStartTime(),
             schedule.getEndTime(),
-            schedule.isImportant()
+            schedule.isImportant(),
+            schedule.getCreatedAt(),
+            schedule.getUpdatedAt()
+
         );
     }
 }
